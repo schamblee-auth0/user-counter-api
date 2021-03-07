@@ -26,6 +26,7 @@ const checkJwt = jwt({
   algorithms: ['RS256']
 });
 
+// Retrieve current user count
 app.get('/', checkJwt, async (req, res) => {
   try {
     await storage.init();
@@ -36,10 +37,12 @@ app.get('/', checkJwt, async (req, res) => {
   }
 });
 
+
+// Increase the user count
 app.post('/', checkJwt, async (req, res) => {
   try {
     await storage.init();
-    let oldUserCount = await storage.getItem('userCount');
+    let oldUserCount = await storage.getItem('userCount') || 0;
     oldUserCount++;
     const newUserCount = await storage.setItem('userCount', oldUserCount);
     const userCount = newUserCount.content.value;
